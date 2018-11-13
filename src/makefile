@@ -20,6 +20,8 @@ PLAT?=linux
 # lua version to build against
 LUAV?=5.1
 
+PREFIX_anyarch?=../../../build/luajit
+
 # MYCFLAGS: to be set by user if needed
 MYCFLAGS?=
 
@@ -31,14 +33,9 @@ MYLDFLAGS?=
 # for testing and debugging luasocket itself
 DEBUG?=NODEBUG
 
-# where lua headers are found for macosx builds
-# LUAINC_macosx:
-# /opt/local/include
-LUAINC_macosx_base?=/opt/local/include
+LUAINC_macosx_base?=$(PREFIX_anyarch)/include
 LUAINC_macosx?=$(LUAINC_macosx_base)/lua/$(LUAV)
-# FIXME default should this default to fink or to macports?
-# What happens when more than one Lua version is installed?
-LUAPREFIX_macosx?=/opt/local
+LUAPREFIX_macosx?=$(PREFIX_anyarch)
 CDIR_macosx?=lib/lua/$(LUAV)
 LDIR_macosx?=share/lua/$(LUAV)
 
@@ -47,22 +44,22 @@ LDIR_macosx?=share/lua/$(LUAV)
 # /usr/local/include
 # /usr/local/include/lua$(LUAV)
 # where lua headers are found for linux builds
-LUAINC_linux_base?=/usr/include
+LUAINC_linux_base?=$(PREFIX_anyarch)/include
 LUAINC_linux?=$(LUAINC_linux_base)/lua/$(LUAV)
-LUAPREFIX_linux?=/usr/local
+LUAPREFIX_linux?=$(PREFIX_anyarch)
 CDIR_linux?=lib/lua/$(LUAV)
 LDIR_linux?=share/lua/$(LUAV)
 
 # where lua headers are found for mingw builds
 # LUAINC_mingw:
 # /opt/local/include
-LUAINC_mingw_base?=/usr/include
+LUAINC_mingw_base?=$(PREFIX_anyarch)/include
 LUAINC_mingw?=$(LUAINC_mingw_base)/lua/$(LUAV)
-LUALIB_mingw_base?=/usr/bin
+LUALIB_mingw_base?=$(PREFIX_anyarch)/bin
 LUALIB_mingw?=$(LUALIB_mingw_base)/lua/$(LUAV)/lua$(subst .,,$(LUAV)).dll
-LUAPREFIX_mingw?=/usr
-CDIR_mingw?=lua/$(LUAV)
-LDIR_mingw?=lua/$(LUAV)/lua
+LUAPREFIX_mingw?=$(PREFIX_anyarch)
+CDIR_mingw?=lib/lua/$(LUAV)
+LDIR_mingw?=share/lua/$(LUAV)
 
 # prefix: /usr/local /usr /opt/local /sw
 # the top of the default install tree
