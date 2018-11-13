@@ -53,15 +53,6 @@ LUAPREFIX_linux?=/usr/local
 CDIR_linux?=lib/lua/$(LUAV)
 LDIR_linux?=share/lua/$(LUAV)
 
-# LUAINC_freebsd:
-# /usr/local/include/lua$(LUAV)
-# where lua headers are found for freebsd builds
-LUAINC_freebsd_base?=/usr/local/include/
-LUAINC_freebsd?=$(LUAINC_freebsd_base)/lua$(LUAV)
-LUAPREFIX_freebsd?=/usr/local/
-CDIR_freebsd?=lib/lua/$(LUAV)
-LDIR_freebsd?=share/lua/$(LUAV)
-
 # where lua headers are found for mingw builds
 # LUAINC_mingw:
 # /opt/local/include
@@ -72,26 +63,6 @@ LUALIB_mingw?=$(LUALIB_mingw_base)/lua/$(LUAV)/lua$(subst .,,$(LUAV)).dll
 LUAPREFIX_mingw?=/usr
 CDIR_mingw?=lua/$(LUAV)
 LDIR_mingw?=lua/$(LUAV)/lua
-
-
-# LUAINC_win32:
-# LUALIB_win32:
-# where lua headers and libraries are found for win32 builds
-LUAPREFIX_win32?=
-LUAINC_win32?=$(LUAPREFIX_win32)/include/lua/$(LUAV)
-PLATFORM_win32?=Release
-CDIR_win32?=bin/lua/$(LUAV)/$(PLATFORM_win32)
-LDIR_win32?=bin/lua/$(LUAV)/$(PLATFORM_win32)/lua
-LUALIB_win32?=$(LUAPREFIX_win32)/lib/lua/$(LUAV)/$(PLATFORM_win32)
-LUALIBNAME_win32?=lua$(subst .,,$(LUAV)).lib 
-
-
-# LUAINC_solaris:
-LUAINC_solaris_base?=/usr/include
-LUAINC_solaris?=$(LUAINC_solaris_base)/lua/$(LUAV)
-LUAPREFIX_solaris?=/usr/local
-CDIR_solaris?=lib/lua/$(LUAV)
-LDIR_solaris?=share/lua/$(LUAV)
 
 # prefix: /usr/local /usr /opt/local /sw
 # the top of the default install tree
@@ -141,7 +112,7 @@ print:
 #------
 # Supported platforms
 #
-PLATS= macosx linux win32 mingw solaris
+PLATS= macosx linux mingw
 
 #------
 # Compiler and linker settings
@@ -177,38 +148,6 @@ SOCKET_linux=usocket.o
 
 #------
 # Compiler and linker settings
-# for FreeBSD
-SO_freebsd=so
-O_freebsd=o
-CC_freebsd=gcc
-DEF_freebsd=-DLUASOCKET_$(DEBUG) \
-	-DLUASOCKET_API='__attribute__((visibility("default")))' \
-	-DUNIX_API='__attribute__((visibility("default")))' \
-	-DMIME_API='__attribute__((visibility("default")))'
-CFLAGS_freebsd= -I$(LUAINC) $(DEF) -Wall -Wshadow -Wextra \
-	-Wimplicit -O2 -ggdb3 -fpic -fvisibility=hidden
-LDFLAGS_freebsd=-O -shared -fpic -o 
-LD_freebsd=gcc
-SOCKET_freebsd=usocket.o
-
-#------
-# Compiler and linker settings
-# for Solaris
-SO_solaris=so
-O_solaris=o
-CC_solaris=gcc
-DEF_solaris=-DLUASOCKET_$(DEBUG) \
-	-DLUASOCKET_API='__attribute__((visibility("default")))' \
-	-DUNIX_API='__attribute__((visibility("default")))' \
-	-DMIME_API='__attribute__((visibility("default")))'
-CFLAGS_solaris=-I$(LUAINC) $(DEF) -Wall -Wshadow -Wextra \
-	-Wimplicit -O2 -ggdb3 -fpic -fvisibility=hidden   
-LDFLAGS_solaris=-lnsl -lsocket -lresolv -O -shared -fpic -o 
-LD_solaris=gcc
-SOCKET_solaris=usocket.o
-
-#------
-# Compiler and linker settings
 # for MingW
 SO_mingw=dll
 O_mingw=o
@@ -222,26 +161,6 @@ LDFLAGS_mingw= $(LUALIB) -shared -Wl,-s -lws2_32 -o
 LD_mingw=gcc
 SOCKET_mingw=wsocket.o
 
-
-#------
-# Compiler and linker settings
-# for Win32
-SO_win32=dll
-O_win32=obj
-CC_win32=cl
-DEF_win32= //D "WIN32" //D "NDEBUG" //D "_WINDOWS" //D "_USRDLL" \
-     //D "LUASOCKET_API=__declspec(dllexport)" //D "_CRT_SECURE_NO_WARNINGS" \
-     //D "_WINDLL" //D "MIME_API=__declspec(dllexport)" \
-     //D "LUASOCKET_$(DEBUG)" 
-CFLAGS_win32=//I "$(LUAINC)" $(DEF) //O2 //Ot //MD //W3 //nologo
-LDFLAGS_win32= //nologo //link //NOLOGO //DLL //INCREMENTAL:NO \
-    //MANIFEST //MANIFESTFILE:"intermediate.manifest" \
-    //MANIFESTUAC:"level='asInvoker' uiAccess='false'" \
-	//SUBSYSTEM:WINDOWS //OPT:REF //OPT:ICF //DYNAMICBASE:NO \
-    //MACHINE:X86 /LIBPATH:"$(shell cmd //c echo $(LUALIB))" \
-	$(LUALIBNAME_win32) ws2_32.lib //OUT:
-LD_win32=cl
-SOCKET_win32=wsocket.obj
 
 .SUFFIXES: .obj
 
@@ -346,23 +265,14 @@ TO_TOP_LDIR= \
 default: $(PLAT)
 
 
-freebsd:
-	$(MAKE) all-unix PLAT=freebsd
-
 macosx:
 	$(MAKE) all-unix PLAT=macosx
-
-win32:
-	$(MAKE) all PLAT=win32
 
 linux:
 	$(MAKE) all-unix PLAT=linux
 
 mingw:
 	$(MAKE) all PLAT=mingw
-	
-solaris:
-	$(MAKE) all-unix PLAT=solaris
 
 none:
 	@echo "Please run"
