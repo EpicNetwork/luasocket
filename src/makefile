@@ -116,7 +116,7 @@ PLATS= macosx linux mingw
 # for Mac OS X
 SO_macosx=so
 O_macosx=o
-CC_macosx=gcc
+CC_macosx=$(CC)
 DEF_macosx= -DLUASOCKET_$(DEBUG) -DUNIX_HAS_SUN_LEN \
 	-DLUASOCKET_API='__attribute__((visibility("default")))' \
 	-DUNIX_API='__attribute__((visibility("default")))' \
@@ -124,7 +124,6 @@ DEF_macosx= -DLUASOCKET_$(DEBUG) -DUNIX_HAS_SUN_LEN \
 CFLAGS_macosx= -I$(LUAINC) $(DEF) -Wall -O2 -fno-common \
 	-fvisibility=hidden
 LDFLAGS_macosx= -bundle -undefined dynamic_lookup -o 
-LD_macosx= export MACOSX_DEPLOYMENT_TARGET="10.3"; gcc
 SOCKET_macosx=usocket.o
 
 #------
@@ -132,7 +131,7 @@ SOCKET_macosx=usocket.o
 # for Linux
 SO_linux=so
 O_linux=o
-CC_linux=gcc
+CC_linux=$(CC)
 DEF_linux=-DLUASOCKET_$(DEBUG) \
 	-DLUASOCKET_API='__attribute__((visibility("default")))' \
 	-DUNIX_API='__attribute__((visibility("default")))' \
@@ -140,7 +139,7 @@ DEF_linux=-DLUASOCKET_$(DEBUG) \
 CFLAGS_linux= -I$(LUAINC) $(DEF) -Wall -Wshadow -Wextra \
 	-Wimplicit -O2 -ggdb3 -fpic -fvisibility=hidden
 LDFLAGS_linux=-O -shared -fpic -o 
-LD_linux=gcc
+LD_linux=$(CC)
 SOCKET_linux=usocket.o
 
 #------
@@ -148,14 +147,14 @@ SOCKET_linux=usocket.o
 # for MingW
 SO_mingw=dll
 O_mingw=o
-CC_mingw=gcc
+CC_mingw=$(CC)
 DEF_mingw= -DLUASOCKET_INET_PTON -DLUASOCKET_$(DEBUG) \
 	-DWINVER=0x0501 -DLUASOCKET_API='__declspec(dllexport)' \
 	-DMIME_API='__declspec(dllexport)'
 CFLAGS_mingw= -I$(LUAINC) $(DEF) -Wall -O2 -fno-common \
 	-fvisibility=hidden
 LDFLAGS_mingw= $(LUALIB) -shared -Wl,-s -lws2_32 -o 
-LD_mingw=gcc
+LD_mingw=$(CC)
 SOCKET_mingw=wsocket.o
 
 
@@ -180,7 +179,7 @@ SOCKET=$(SOCKET_$(PLAT))
 #------
 # Settings selected for platform
 #
-CC=$(CC_$(PLAT))
+CC?=$(CC_$(PLAT))
 DEF=$(DEF_$(PLAT))
 CFLAGS=$(MYCFLAGS) $(CFLAGS_$(PLAT))
 LDFLAGS=$(MYLDFLAGS) $(LDFLAGS_$(PLAT))
