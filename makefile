@@ -10,7 +10,7 @@
 #   print	           print the build settings
 
 PLAT?= linux
-PLATS= macosx linux mingw
+PLATS= macosx linux mingw win32 win64
 
 all: $(PLAT)
 

@@ -268,6 +268,12 @@ macosx:
 linux:
 	$(MAKE) all-unix PLAT=linux
 
+win32:
+	$(MAKE) all PLAT=mingw
+
+win64:
+	$(MAKE) all PLAT=mingw
+
 mingw:
 	$(MAKE) all PLAT=mingw
 
