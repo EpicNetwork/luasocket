@@ -20,7 +20,7 @@ PLAT?=linux
 # lua version to build against
 LUAV?=5.1
 
-PREFIX_anyarch?=../../../build/luajit
+PREFIX_anyarch?=../../../build
 
 # MYCFLAGS: to be set by user if needed
 MYCFLAGS?=
